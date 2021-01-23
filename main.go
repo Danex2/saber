@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Danex2/saber/router"
+	"github.com/Danex2/saber/commands"
 	"github.com/andersfylling/disgord"
 	"github.com/auttaja/gommand"
 	"github.com/joho/godotenv"
@@ -46,20 +46,28 @@ func main() {
 
 	})
 	
-	router.Bot.Hook(client)
+	commands.Bot.Hook(client)
+
+	commands.Bot.AddErrorHandler(func(ctx *gommand.Context, err error) bool {
+		switch err.(type) {
+		case *gommand.CommandNotFound, *gommand.CommandBlank:
+			// We will ignore. The command was not found in the router or the command was blank.
+			return true
+		case *gommand.InvalidTransformation:
+			_, _ = ctx.Reply("Invalid argument:", err.Error())
+			return true
+		case *gommand.IncorrectPermissions:
+			_, _ = ctx.Reply("Invalid permissions:", err.Error())
+			return true
+		case *gommand.InvalidArgCount:
+			_, _ = ctx.Reply("Invalid argument count.")
+			return true
+		}
+
+		// This was not handled here.
+		return false
+	})
 
 	defer client.Gateway().StayConnectedUntilInterrupted()
-	
 
-}
-
-func init() {
-	router.Bot.SetCommand(&gommand.Command{
-		Name: "ping",
-		Description: "pong",
-		Function: func(ctx *gommand.Context) error {
-			_, _ = ctx.Reply("Pong")
-			return nil
-		},
-	})
 }

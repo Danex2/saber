@@ -1,8 +1,8 @@
-package router
+package commands
 
 import "github.com/auttaja/gommand"
 
-func main() {
+func init() {
 	Bot.SetCommand(&gommand.Command{
 		Name: "ping",
 		Description: "pong",
