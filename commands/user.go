@@ -19,18 +19,23 @@ func init() {
 
 	Bot.SetCommand(&gommand.Command{
 		Name: "user",
-		Description: "Get info about the user",
+		Description: "Display info about the user. Usage: !user [@user]",
+		ArgTransformers: []gommand.ArgTransformer{
+			{
+					  Function: gommand.MemberTransformer,
+			},
+		},
 		Function: func(ctx *gommand.Context) error {
 
-			result := strings.SplitN(ctx.Message.Member.JoinedAt.String(), "T", 2)
+			mentionedUser := ctx.Args[0]
+			result := strings.SplitN(mentionedUser.(*disgord.Member).JoinedAt.String(), "T", 2)
 
 			t, _ := time.Parse("2006-01-02", result[0])
 
-			userImg, _ := ctx.Message.Author.AvatarURL(2048, false)
-
+			userImg, _ := mentionedUser.(*disgord.Member).User.AvatarURL(2048, false)
 
 			// Move this logic into a utility function
-			unixTimeStamp := ((ctx.Message.Author.ID / 4194304) + 1420070400000) / 1000
+			unixTimeStamp := (( mentionedUser.(*disgord.Member).UserID / 4194304) + 1420070400000) / 1000
 
 			parsedTimeStamp, err := strconv.ParseInt(fmt.Sprint(unixTimeStamp), 10, 64)
 
@@ -46,42 +51,72 @@ func init() {
 
 			var userRoles []string
 
-			for i := range ctx.Message.Member.Roles {
-				userRoles = append(userRoles, fmt.Sprintf("<@&%s>", ctx.Message.Member.Roles[i]))
-			}
+					
+			for i := range mentionedUser.(*disgord.Member).Roles {
+				userRoles = append(userRoles, fmt.Sprintf("<@&%s>", mentionedUser.(*disgord.Member).Roles[i]))
+			  }
 
-			_, _ = ctx.Reply(&disgord.Embed{
-				Title: "User Details",
-				Fields: []*disgord.EmbedField{{
+			  embed := &disgord.Embed{
+					Title: "User Details",
+					Fields: []*disgord.EmbedField{},
+			  }
+
+			  embed.Fields = append(embed.Fields, &disgord.EmbedField{
 					Name: "ID",
-					Value: ctx.Message.Author.ID.String(),
-				},{
+					Value: mentionedUser.(*disgord.Member).UserID.String(),
+			  })
+
+			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
 					Name: "Username",
-					Value: ctx.Message.Member.User.Tag(),
+					Value: mentionedUser.(*disgord.Member).User.Tag(),
 					Inline: true,
-				}, {
+			  })
+
+
+			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
 					Name: "Avatar URL",
 					Value: fmt.Sprintf("[Link](%s)", userImg),
-				}, {
+			  })
+
+			  if len(mentionedUser.(*disgord.Member).Roles) > 0 {
+
+			  	embed.Fields = append(embed.Fields, &disgord.EmbedField{	
+						Name: "Roles",
+						Value: strings.Join(userRoles, ""),
+			 	 })
+			  } else {
+					
+			   embed.Fields = append(embed.Fields, &disgord.EmbedField{	
 					Name: "Roles",
-					Value: strings.Join(userRoles, ""),
-				}, {
+					Value: "0",
+	  			 })
+			  }
+
+
+			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
 					Name: "Server Join Date",
 					Value: t.Format("January 2 2006"),
 					Inline: true,
-				}, {
+			  })
+			  
+			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
 					Name: "Account Creation Date",
 					Value: y.Format("January 2 2006"),
 					Inline: true,
-				}},
-				Thumbnail: &disgord.EmbedThumbnail{
-					URL: userImg,
-				},
-				Timestamp: disgord.Time{
-					Time: time.Now().UTC(),
-				},
-				Color: 15724753,
-			})
+			  })
+			  
+
+			  embed.Thumbnail = &disgord.EmbedThumbnail{
+				URL: userImg,
+			  }
+
+			  embed.Timestamp = disgord.Time{
+				Time: time.Now().UTC(),
+			  }
+
+			  embed.Color = 15724753
+
+			_, _ = ctx.Reply(embed)
 
 			return nil
 		},
