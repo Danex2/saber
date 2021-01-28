@@ -48,10 +48,9 @@ func init() {
 				Time: time.Now().UTC(),
 			}
 
-			ctx.Session.Guild(ctx.Message.GuildID).Member(ctx.Message.Member.UserID).Kick(strings.Join(reason[:], " "))
-			fmt.Println("kick")
+			ctx.Session.Guild(ctx.Message.GuildID).Member(user.UserID).Kick(strings.Join(reason[:], " "))
 
-			// _, _ = ctx.Reply(embed)
+			 _, _ = ctx.Reply(embed)
 			return nil
 		},
 	})
