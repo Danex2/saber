@@ -12,17 +12,12 @@ import (
 
 func init() {
 
-	// Bot.GetCommand("user").(*gommand.Command).Category = &gommand.Category{
-	// 	Name: "Info",
-	// 	Description: "Info commands provide information about the user or the server",
-	// }
-
 	Bot.SetCommand(&gommand.Command{
-		Name: "user",
+		Name:        "user",
 		Description: "Display info about the user. Usage: !user [@user]",
 		ArgTransformers: []gommand.ArgTransformer{
 			{
-					  Function: gommand.MemberTransformer,
+				Function: gommand.MemberTransformer,
 			},
 		},
 		Function: func(ctx *gommand.Context) error {
@@ -35,7 +30,7 @@ func init() {
 			userImg, _ := mentionedUser.(*disgord.Member).User.AvatarURL(2048, false)
 
 			// Move this logic into a utility function
-			unixTimeStamp := (( mentionedUser.(*disgord.Member).UserID / 4194304) + 1420070400000) / 1000
+			unixTimeStamp := ((mentionedUser.(*disgord.Member).UserID / 4194304) + 1420070400000) / 1000
 
 			parsedTimeStamp, err := strconv.ParseInt(fmt.Sprint(unixTimeStamp), 10, 64)
 
@@ -46,75 +41,71 @@ func init() {
 			joinDate := time.Unix(parsedTimeStamp, 0)
 
 			y, _ := time.Parse("2006-01-02 15:04:05 -0700 MST", joinDate.String())
-		
+
 			// again more clean up probably
 
 			var userRoles []string
 
-					
 			for i := range mentionedUser.(*disgord.Member).Roles {
 				userRoles = append(userRoles, fmt.Sprintf("<@&%s>", mentionedUser.(*disgord.Member).Roles[i]))
-			  }
+			}
 
-			  embed := &disgord.Embed{
-					Title: "User Details",
-					Fields: []*disgord.EmbedField{},
-			  }
+			embed := &disgord.Embed{
+				Title:  "User Details",
+				Fields: []*disgord.EmbedField{},
+			}
 
-			  embed.Fields = append(embed.Fields, &disgord.EmbedField{
-					Name: "ID",
-					Value: mentionedUser.(*disgord.Member).UserID.String(),
-			  })
+			embed.Fields = append(embed.Fields, &disgord.EmbedField{
+				Name:  "ID",
+				Value: mentionedUser.(*disgord.Member).UserID.String(),
+			})
 
-			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-					Name: "Username",
-					Value: mentionedUser.(*disgord.Member).User.Tag(),
-					Inline: true,
-			  })
+			embed.Fields = append(embed.Fields, &disgord.EmbedField{
+				Name:   "Username",
+				Value:  mentionedUser.(*disgord.Member).User.Tag(),
+				Inline: true,
+			})
 
+			embed.Fields = append(embed.Fields, &disgord.EmbedField{
+				Name:  "Avatar URL",
+				Value: fmt.Sprintf("[Link](%s)", userImg),
+			})
 
-			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-					Name: "Avatar URL",
-					Value: fmt.Sprintf("[Link](%s)", userImg),
-			  })
+			if len(mentionedUser.(*disgord.Member).Roles) > 0 {
 
-			  if len(mentionedUser.(*disgord.Member).Roles) > 0 {
+				embed.Fields = append(embed.Fields, &disgord.EmbedField{
+					Name:  "Roles",
+					Value: strings.Join(userRoles, ""),
+				})
+			} else {
 
-			  	embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-						Name: "Roles",
-						Value: strings.Join(userRoles, ""),
-			 	 })
-			  } else {
-					
-			   embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-					Name: "Roles",
+				embed.Fields = append(embed.Fields, &disgord.EmbedField{
+					Name:  "Roles",
 					Value: "0",
-	  			 })
-			  }
+				})
+			}
 
+			embed.Fields = append(embed.Fields, &disgord.EmbedField{
+				Name:   "Server Join Date",
+				Value:  t.Format("January 2 2006"),
+				Inline: true,
+			})
 
-			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-					Name: "Server Join Date",
-					Value: t.Format("January 2 2006"),
-					Inline: true,
-			  })
-			  
-			  embed.Fields = append(embed.Fields, &disgord.EmbedField{	
-					Name: "Account Creation Date",
-					Value: y.Format("January 2 2006"),
-					Inline: true,
-			  })
-			  
+			embed.Fields = append(embed.Fields, &disgord.EmbedField{
+				Name:   "Account Creation Date",
+				Value:  y.Format("January 2 2006"),
+				Inline: true,
+			})
 
-			  embed.Thumbnail = &disgord.EmbedThumbnail{
+			embed.Thumbnail = &disgord.EmbedThumbnail{
 				URL: userImg,
-			  }
+			}
 
-			  embed.Timestamp = disgord.Time{
+			embed.Timestamp = disgord.Time{
 				Time: time.Now().UTC(),
-			  }
+			}
 
-			  embed.Color = 15724753
+			embed.Color = 15724753
 
 			_, _ = ctx.Reply(embed)
 
