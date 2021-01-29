@@ -22,6 +22,11 @@ func init() {
 				Greedy:   true,
 			},
 		},
+		Category: &gommand.Category{
+			Name: "Moderation",
+		},
+		Usage:                "@user <reason>",
+		PermissionValidators: []func(ctx *gommand.Context) (string, bool){},
 		Function: func(ctx *gommand.Context) error {
 
 			user := ctx.Args[0].(*disgord.Member)
@@ -50,7 +55,7 @@ func init() {
 
 			ctx.Session.Guild(ctx.Message.GuildID).Member(user.UserID).Kick(strings.Join(reason[:], " "))
 
-			 _, _ = ctx.Reply(embed)
+			_, _ = ctx.Reply(embed)
 			return nil
 		},
 	})

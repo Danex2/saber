@@ -10,6 +10,7 @@ import (
 )
 
 func init() {
+
 	Bot.SetCommand(&gommand.Command{
 		Name:        "ban",
 		Description: "Ban a user from the discord server",
@@ -25,6 +26,14 @@ func init() {
 				Greedy:   true,
 			},
 		},
+		PermissionValidators: []gommand.PermissionValidator{
+			gommand.ADMINISTRATOR(gommand.CheckBotUserPermissions | gommand.CheckMembersUserPermissions),
+		},
+		Category: &gommand.Category{
+			Name: "Moderation",
+		},
+		Usage: "@user <0-7> <reason>",
+
 		Function: func(ctx *gommand.Context) error {
 
 			user := ctx.Args[0].(*disgord.Member)

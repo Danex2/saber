@@ -14,12 +14,13 @@ func init() {
 
 	Bot.SetCommand(&gommand.Command{
 		Name:        "user",
-		Description: "Display info about the user. Usage: !user [@user]",
+		Description: "Display info about the user.",
 		ArgTransformers: []gommand.ArgTransformer{
 			{
 				Function: gommand.MemberTransformer,
 			},
 		},
+		Usage: "@user",
 		Function: func(ctx *gommand.Context) error {
 
 			mentionedUser := ctx.Args[0]
