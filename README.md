@@ -68,7 +68,7 @@ func (s *Scream) Init() {
 	s.Description = "i reply with a yell"
 }
 
-func (Hello) CommandFunction(ctx *gommand.Context) error {
+func (Scream) CommandFunction(ctx *gommand.Context) error {
 	_, _ = ctx.Reply("WHAT'S UP?!")
 	return nil
 ```
