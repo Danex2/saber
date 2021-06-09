@@ -71,6 +71,7 @@ func (s *Scream) Init() {
 func (Scream) CommandFunction(ctx *gommand.Context) error {
 	_, _ = ctx.Reply("WHAT'S UP?!")
 	return nil
+}
 ```
 
 Next, inside of `init.go` register the new command.
