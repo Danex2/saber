@@ -73,6 +73,25 @@ func (Hello) CommandFunction(ctx *gommand.Context) error {
 	return nil
 ```
 
+Next, inside of `init.go` register the new command.
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/nulfrost/saber/commands"
+)
+
+
+func init() {
+   fmt.Println("Commands loaded.")
+   router.SetCommand(&commands.Hello{})
+   router.setCommand(&commands.Scream{})
+}
+```
+
 Finally, save and restart the bot.
 
 ### Changing the prefix
