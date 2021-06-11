@@ -8,6 +8,6 @@ import (
 
 
 func init() {
-   fmt.Println("Commands loaded.")
    router.SetCommand(&commands.Hello{})
+   fmt.Println("Commands loaded!")
 }
