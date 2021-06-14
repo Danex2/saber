@@ -14,7 +14,7 @@ import (
 
 
 var router = gommand.NewRouter(&gommand.RouterConfig{
-	PrefixCheck: gommand.MultiplePrefixCheckers(gommand.StaticPrefix("!!"), gommand.MentionPrefix),
+	PrefixCheck: gommand.MultiplePrefixCheckers(gommand.StaticPrefix("$"), gommand.MentionPrefix),
 })
 
 func main() {

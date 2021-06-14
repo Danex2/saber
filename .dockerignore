@@ -1,2 +1,4 @@
 .env.sample
 .gitignore
+node_modules/
+package*.json

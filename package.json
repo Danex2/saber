@@ -1,0 +1,23 @@
+{
+  "name": "saber",
+  "version": "1.0.0",
+  "description": "Saber is a discord bot I am making using Golang to get a better understanding of the language.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec go run *.go --signal SIGTERM"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nulfrost/saber.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nulfrost/saber/issues"
+  },
+  "homepage": "https://github.com/nulfrost/saber#readme",
+  "dependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

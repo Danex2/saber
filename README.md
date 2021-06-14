@@ -34,10 +34,14 @@ Install dependencies
   go mod download
 ```
 
+```bash
+  npm install
+```
+
 Start the bot
 
 ```bash
-  go run *.go
+  npm run dev
 ```
 
 ### Alternatively with Docker

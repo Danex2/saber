@@ -9,5 +9,6 @@ import (
 
 func init() {
    router.SetCommand(&commands.Ping{})
+   router.SetCommand(&commands.User{})
    fmt.Println("Commands loaded!")
 }
