@@ -12,7 +12,11 @@ COPY . .
 
 RUN CGO_ENABLED=0 go build
 
-FROM scratch
-COPY --from=base /app/saber /app/
+FROM alpine
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
+
+WORKDIR /app
+COPY --from=base /app/saber .
+COPY .env .
 
 CMD ["/app/saber"]

@@ -40,6 +40,13 @@ Start the bot
   go run *.go
 ```
 
+### Alternatively with Docker
+
+```bash
+  docker build -t saber .
+  docker run --name saber -d saber
+```
+
 ## Usage / Examples
 
 ### Adding more commands
